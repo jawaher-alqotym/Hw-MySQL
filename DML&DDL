@@ -1,0 +1,70 @@
+#DDL
+create database store;
+
+use store;
+create table countries (code int primary key, name varchar(20) not null, continent_name varchar(20) unique);
+
+create table users (
+id int primary key, full_name varchar(20),
+ email varchar(20) unique, 
+ gender char(1),
+ date_of_birth varchar(15),
+ created_at datetime,
+ country_code int,
+ foreign key (country_code) references countries(code),
+ check (gender in ('m','f'))
+ );
+
+create table orders (
+id int primary key, 
+user_id int, 
+status varchar(6),
+created_at datetime,
+foreign key (user_id) references users(id),
+ check (status in ('start','finish')));
+
+create table products (
+id int primary key, name varchar(10) not null, price int default 0,
+ status varchar(10),created_at datetime,
+ check (status in ('valid','expired')));
+
+create table order_products (
+order_id int,
+ product_id int,
+ quantity int default 0,
+ foreign key (order_id) references orders(id),
+ foreign key (product_id) references products(id));
+
+#DML
+
+#Add new row to the countries table.
+insert into countries values (1,'china','asia');
+insert into countries values (2,'india','asiaaaa');
+
+#Add new row to the users table, FK is 1 refering to china
+insert into users values (1,'ali','ali@gmail.com','m','1998-7-7','2045-12-12',1);
+
+#Add new row to the order table, FK is user ali with id 1 
+insert into orders values (1,1,'start','2045-12-12');
+
+#Add new rows to the products table.
+insert into products values (1,'shoes',100,'valid','2060-11-11');
+insert into products values (2,'drees',200,'valid','2024-11-11');
+
+#Add new row to the order_products table, order_id = 1 , prodect is shoos
+insert into order_products values (1,1,3);
+
+#Update row from countries table, from 'asiaaa' to 'south asia'
+update countries set continent_name='south asia' where code=2;
+
+#Delete row from products table.
+delete from products where id=2;
+
+
+
+
+
+
+
+
+
